@@ -1,23 +1,24 @@
-#!/usr/bin/python3
+!/usr/bin/python3
 
 # Curso: Programación bajo plataformas abiertas
 # Estudinates:
 # Juarez Moraga Adonay B74047
 # Abarca Obregón Nelber
-# Prado Francklin
+# Calderon Prado Franklin B81405
 
 '''
 Este programa es la elaboración del juego Snake
 '''
 
 
-# Se importan librerias
+ #Se importan librerias
 import turtle
 import time
 import random
 
 atrasar = 0.1
 lista = []
+obstaculos=[]
 #Variables de conteo puntos
 score = 0
 high_score = 0
@@ -25,10 +26,10 @@ serpiente_total = len(lista)
         
 
 # Se configura la ventana
-# Se declara variable ventana.
-# Se configura para que muestre color, titulo y demas. 
+ #Se declara variable ventana.
+ #Se configura para que muestre color, titulo y demas. 
 ventana = turtle.Screen()
-ventana.title('Adonay se la come entera')
+ventana.title('Juego Snake')
 ventana.bgcolor('green')
 ventana.setup(width= 600, height=600)
 ventana.tracer(0)
@@ -51,11 +52,10 @@ comida.speed(0)
 comida.shape('circle')
 comida.color('red')
 comida.penup()
-comida.goto(0,0)
+comida.goto(random.randint(-280,280),random.randint(-280,280))
 #comida.direction = 'stop'
 
 #segmentos = []
-
 
 
 # Funcion para las teclas.
@@ -106,6 +106,16 @@ texto.hideturtle()
 texto.goto(-280, 270)
 #texto.write("PUNTOS: 0  RECORD: 0".format(PUNTOS, RECORD), 
 #            font =("Courier", 16, "normal"))
+# Se define el texto de fin de juego
+GameOver= turtle.Turtle()
+GameOver.speed(0)
+GameOver.color("black")
+GameOver.penup()
+GameOver.hideturtle()
+GameOver.goto(-146,0)
+#GameOver.write("Game Over", 
+#           font =("Courier",40, "normal"))
+
 
 
 
@@ -139,6 +149,18 @@ while True:
         siguinte_cabe.color('grey')
         siguinte_cabe.penup()
         lista.append(siguinte_cabe)
+
+        # se agrega un obstáculo cada 4 elementos 
+        c = len(lista)
+        if c%4 == 0:
+            obstaculo = turtle.Turtle()
+            obstaculo.speed(0)
+            obstaculo.shape('square')
+            obstaculo.color('blue')
+            obstaculo.penup()
+            obstaculo.goto(random.randint(-280,280),random.randint(-280,280))
+            obstaculos.append(obstaculo)
+                
         
         
         #Contador de puntos
@@ -174,14 +196,47 @@ while True:
     #Colisiones con el cuerpo
     for segmento in lista:
         if segmento.distance(cabeza) < 20:
+            GameOver.write("Game Over", font =("Courier",40, "normal"))
             time.sleep(1)
             cabeza.goto(0,0)
             cabeza.direction = "stop"
+            GameOver.clear()
             
             #Escondemos segmentos
             for segmento in lista:
                 segmento.goto(1000, 1000)
-            lista.clear
+            lista.clear()
+
+            #Escondemos obstaculos
+            for obstaculo in obstaculos:
+                obstaculo.goto(1000, 1000)
+            obstaculos.clear()
+               
+               
+            # Reinicio del marcador
+            score = 0
+            texto.clear()
+            texto.write("Puntos: {}  Record: {}".format(score, high_score), 
+                        font=("Courier", 16))
+            
+ # Colisiones con los obstáculos
+    for obstaculo in obstaculos:
+        if obstaculo.distance(cabeza) < 20:
+            GameOver.write("Game Over", font =("Courier",40, "normal"))
+            time.sleep(1)
+            cabeza.goto(0,0)
+            cabeza.direction = "stop"
+            GameOver.clear()
+
+            #Escondemos segmentos
+            for segmento in lista:
+                segmento.goto(1000, 1000)
+            lista.clear()
+            
+            #Escondemos obstaculos
+            for obstaculo in obstaculos:
+                obstaculo.goto(1000, 1000)
+            obstaculos.clear()
                
             # Reinicio del marcador
             score = 0
@@ -190,4 +245,3 @@ while True:
                         font=("Courier", 16))
     
     time.sleep(atrasar)
-    
